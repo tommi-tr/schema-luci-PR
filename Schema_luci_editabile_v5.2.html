@@ -1,0 +1,494 @@
+<!-- Script html per lo schema luci del Teatro di Pesaro La Piccola Ribalta. -->
+<!-- Ideato da Tommaso Ruscitti, realizzato con Claude (Anthropic). Versione 5.2. -->
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; form-action 'none'; base-uri 'none'">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schema luci</title>
+<style>
+html,body{margin:0;background:#e6e6e6;font-family:"Courier New",Courier,monospace;color:#000}
+#bar{gap:6px;position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid #000;padding:8px 8px;font-size:12px;display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+#bar button,#bar select{font:inherit;padding:4px 8px;border:1px solid #000;background:#fff;color:#000;border-radius:0;cursor:pointer}
+#bar button:hover{background:#000;color:#fff}
+#bar .sep{width:1px;height:20px;background:#999}
+#bar input[type=range]{width:150px;vertical-align:middle}
+#bar .grp{display:flex;align-items:center;gap:6px;min-height:28px}
+#bar .grp+.grp{border-left:2px solid #000;padding-left:9px}
+#bar #bHelp{margin-left:auto;white-space:nowrap;background:#000;color:#fff;border:2px solid #000;font-weight:700;padding:5px 10px}
+#bar #bHelp:hover{background:#fff;color:#000}
+#bar .gl{font-weight:700}
+#bar input[type=range]{width:42px}
+#bar select{width:104px;max-width:none;padding:4px 4px 4px 8px;text-overflow:ellipsis}
+#bar option{padding:3px 8px}
+#zv{display:inline-block;width:4ch;text-align:right;font-variant-numeric:tabular-nums}
+#bar .sw{position:relative;width:40px;height:20px;padding:0;border:2px solid #000;border-radius:11px;background:#fff}
+#bar .sw:hover{background:#fff;color:#000}
+#bar .sw i{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#000;transition:left .12s}
+#bar .sw[aria-checked=true] i{left:22px}
+.msym{position:static!important;display:inline-block;vertical-align:middle;overflow:visible}
+#symA,#symB{display:inline-flex;align-items:center;gap:2px;min-width:38px;justify-content:center}
+.truss{user-select:none;-webkit-user-select:none}
+.truss::before{content:"";position:absolute;left:0;right:0;top:-16px;bottom:-16px}
+#help{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;display:flex;align-items:center;justify-content:center}
+#help[hidden]{display:none}
+#help .box{background:#fff;border:2px solid #000;width:min(780px,94vw);max-height:88vh;overflow:auto;font-size:13px;line-height:19px}
+#help .hd{position:sticky;top:0;background:#000;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:12px}
+#help .hd b{font-size:16px;flex:1}
+#help .hd span{font-size:12px;opacity:.85}
+#help .hd button{background:#fff;color:#000;border:0;font:inherit;font-weight:700;padding:2px 10px;cursor:pointer}
+#help .bd{padding:6px 18px 18px}
+#help h3{margin:18px 0 6px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+#help p{margin:6px 0}
+#help table{border-collapse:collapse;width:100%}
+#help td,#help th{border:1px solid #000;padding:5px 8px;vertical-align:middle;text-align:left}
+#help th{background:#eee;font-size:12px}
+#help td.c{text-align:center;width:90px}
+#help ul{margin:4px 0;padding-left:20px}
+#help li{margin:3px 0}
+#help kbd{border:1px solid #000;border-bottom-width:2px;padding:0 5px;font:inherit;background:#fff}
+#holder{margin:16px auto}
+#wrap{transform-origin:0 0}
+#sheet{position:relative;width:1123px;height:794px;background:#fff;overflow:hidden;box-shadow:0 0 0 1px #aaa;font-family:"Courier New",Courier,monospace;color:#000}
+#sheet *{box-sizing:border-box}
+.abs{position:absolute}
+.f{outline:none;white-space:nowrap}
+.f.multi{white-space:pre-wrap}
+.f:focus,.f.editing{outline:1px dashed #000;background:#fff6b3;color:#000!important}
+.f:empty::before{content:attr(data-ph);color:#9a9a9a}
+.it{position:absolute;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+.it:hover{outline:1px dashed #999;outline-offset:3px}
+.it.drag{cursor:grabbing}
+.it .f:empty::before{opacity:0}
+.it .f:empty:hover::before,.it .f.editing:empty::before{opacity:1}
+.it .f:hover{outline:1px dashed #888}
+.it .f{cursor:text;user-select:text;-webkit-user-select:text}
+.sym{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
+.lb,.chn,.mid{cursor:text}
+.lb{white-space:normal!important;width:max-content;max-width:96px;overflow-wrap:anywhere}
+.lb,.chn{padding:3px 8px;min-width:44px!important;min-height:20px!important}
+.lb{padding-left:calc(8px + .06em)!important}
+.lb{position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);font-size:10px;line-height:14px;font-weight:700;letter-spacing:.06em;text-align:center}
+.chn{position:absolute;left:50%;top:calc(100% + 3px);transform:translateX(-50%);font-size:12px;line-height:16px;font-weight:700;text-align:center;min-width:28px;min-height:16px}
+.num{position:absolute;width:40px;height:20px;font-size:15px;line-height:20px;font-weight:700;text-align:center}
+.mid{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;line-height:14px;font-weight:700;text-align:center;min-width:30px;min-height:14px}
+.mid:not(:empty){background:#fff;padding:0 2px}
+.t-bar{background:#fff;border:2px solid #000}
+.t-bar .mid{font-size:10px;letter-spacing:.2em;padding-left:.2em;background:none}
+.t-bar .mid:not(:empty){background:none}
+.tb{display:none;position:absolute;left:50%;bottom:calc(100% + 22px);transform:translateX(-50%);gap:4px;z-index:20;cursor:default}
+.it.on .tb{display:flex}
+.tb button{width:24px;height:24px;padding:0;border:1px solid #000;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tb button:hover{background:#000}
+.tb button:hover svg{stroke:#fff}
+.tb svg{stroke:#000;fill:none;stroke-width:2}
+.tag{cursor:grab;touch-action:none;position:absolute;left:40px;width:82px;min-height:44px;padding:4px;white-space:normal;overflow-wrap:anywhere;transform:translateY(-50%);background:#000;color:#fff;border-radius:3px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.tag .f{color:#fff}
+.tag .f{min-width:14px;min-height:13px;cursor:text}
+.tag .f:empty::before{color:#aaa}
+.tag .f.editing{color:#000!important}
+.truss.hot{border-color:#000;box-shadow:0 0 0 3px rgba(0,0,0,.25)}
+.tag .f{white-space:normal;text-align:center;width:100%}
+.tag.long .t1{font-size:8px;line-height:10px}
+.t1{font-size:10px;line-height:13px;font-weight:700;letter-spacing:.06em}
+.t2{font-size:17px;line-height:20px;font-weight:700}
+.truss{position:absolute;left:122px;width:940px;height:8px;border-top:2px solid #000;border-bottom:2px solid #000;background:#fff}
+@media print{
+ @page{size:A4 landscape;margin:0}
+ html,body{background:#fff;height:794px;overflow:hidden}
+ #bar,#help{display:none!important}
+ #holder{margin:0!important;width:auto!important;height:auto!important}
+ #wrap{transform:none!important}
+ #sheet{box-shadow:none;height:793px}
+ .tb{display:none!important}
+ .f:empty{visibility:hidden}
+ .it:hover{outline:none}
+}
+</style>
+</head>
+<body>
+<div id="bar">
+ <div class="grp"><span class="gl">Zoom</span><input type="range" id="zoom" min="30" max="160" value="100"><span id="zv">100%</span><button id="bFit">Adatta</button></div>
+ <div class="grp"><span id="symA"></span><button id="symSwitch" class="sw" role="switch" aria-checked="false" title="Cambia simboli"><i></i></button><span id="symB"></span></div>
+ <div class="grp"><span class="gl">Aggiungi</span><select id="selType"><option value="faro">PC 1000</option><option value="led">PAR</option><option value="big">PAR grande</option><option value="cob">COB</option><option value="bar">Barra LED</option></select><select id="selRow"></select><button id="bAdd">Aggiungi</button></div>
+ <div class="grp"><button id="bUndo" title="Ctrl+Z">Annulla</button><button id="bRedo" title="Ctrl+Maiusc+Z">Ripeti</button><button id="bReset" title="Torna allo schema com'era all'apertura (si può annullare)">Reset</button></div>
+ <div class="grp"><button id="bSave" title="Salva una copia di questa pagina con le modifiche">Salva con nome…</button><button id="bPrint">Stampa / PDF</button></div>
+ <button id="bHelp">Istruzioni</button>
+</div>
+<div id="help" hidden><div class="box"><div class="hd"><b>Istruzioni</b><span id="ver"></span><button id="hClose">Chiudi ✕</button></div><div class="bd" id="helpBody"></div></div></div>
+<div id="holder"><div id="wrap"><div id="sheet"></div></div></div>
+<script type="application/json" id="state">{"title": "SCHEMA LUCI — Teatro di Pesaro La Piccola Ribalta", "headR": "", "footL": "", "footR": "", "rows": [{"id": "r3", "y": 168, "t1": "AMERICANA", "t2": "3"}, {"id": "r2", "y": 308, "t1": "AMERICANA", "t2": "2"}, {"id": "r1", "y": 458, "t1": "AMERICANA", "t2": "1"}, {"id": "rs", "y": 668, "t1": "AMERICANA", "t2": "SALA"}], "items": [{"id": 1, "row": "r3", "t": "bar", "x": 345, "rot": 0, "top": "", "mid": "BARRA LED", "bot": "22·23·24"}, {"id": 2, "row": "r3", "t": "bar", "x": 595, "rot": 0, "top": "", "mid": "BARRA LED", "bot": "22·23·24"}, {"id": 3, "row": "r3", "t": "bar", "x": 845, "rot": 0, "top": "", "mid": "BARRA LED", "bot": "22·23·24"}, {"id": 4, "row": "r2", "t": "faro", "x": 210, "rot": -55, "top": "", "mid": "9", "bot": ""}, {"id": 5, "row": "r2", "t": "led", "x": 315, "rot": 0, "top": "PAR", "mid": "", "bot": "31·32·33"}, {"id": 6, "row": "r2", "t": "faro", "x": 415, "rot": 0, "top": "", "mid": "10", "bot": ""}, {"id": 7, "row": "r2", "t": "big", "x": 510, "rot": 0, "top": "PAR GRANDE", "mid": "", "bot": "37·38·39·40"}, {"id": 8, "row": "r2", "t": "big", "x": 680, "rot": 0, "top": "PAR GRANDE", "mid": "", "bot": "41·42·43·44"}, {"id": 9, "row": "r2", "t": "faro", "x": 775, "rot": 0, "top": "", "mid": "11", "bot": ""}, {"id": 10, "row": "r2", "t": "led", "x": 875, "rot": 0, "top": "PAR", "mid": "", "bot": "34·35·36"}, {"id": 11, "row": "r2", "t": "faro", "x": 980, "rot": 55, "top": "", "mid": "12", "bot": ""}, {"id": 12, "row": "r1", "t": "faro", "x": 210, "rot": 0, "top": "", "mid": "5", "bot": ""}, {"id": 13, "row": "r1", "t": "faro", "x": 285, "rot": 0, "top": "", "mid": "13", "bot": ""}, {"id": 14, "row": "r1", "t": "faro", "x": 360, "rot": 0, "top": "", "mid": "6", "bot": ""}, {"id": 15, "row": "r1", "t": "led", "x": 460, "rot": 0, "top": "PAR", "mid": "", "bot": "25·26·27"}, {"id": 16, "row": "r1", "t": "cob", "x": 550, "rot": 0, "top": "COB", "mid": "", "bot": "16·17·18"}, {"id": 17, "row": "r1", "t": "cob", "x": 640, "rot": 0, "top": "COB", "mid": "", "bot": "19·20·21"}, {"id": 18, "row": "r1", "t": "led", "x": 730, "rot": 0, "top": "PAR", "mid": "", "bot": "28·29·30"}, {"id": 19, "row": "r1", "t": "faro", "x": 830, "rot": 0, "top": "", "mid": "7", "bot": ""}, {"id": 20, "row": "r1", "t": "faro", "x": 905, "rot": 0, "top": "", "mid": "14", "bot": ""}, {"id": 21, "row": "r1", "t": "faro", "x": 980, "rot": 0, "top": "", "mid": "8", "bot": ""}, {"id": 22, "row": "rs", "t": "faro", "x": 250, "rot": 180, "top": "", "mid": "1", "bot": ""}, {"id": 23, "row": "rs", "t": "faro", "x": 460, "rot": 180, "top": "", "mid": "2", "bot": ""}, {"id": 24, "row": "rs", "t": "faro", "x": 730, "rot": 180, "top": "", "mid": "3", "bot": ""}, {"id": 25, "row": "rs", "t": "faro", "x": 940, "rot": 180, "top": "", "mid": "4", "bot": ""}], "nextId": 26}</script>
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s);};
+var state=JSON.parse($('#state').textContent);
+var hist=[];
+var sheet=$('#sheet');
+var T={faro:[44,64],led:[50,50],big:[70,70],cob:[46,46],bar:[230,22]};
+var DEF={faro:{top:'',mid:'?',bot:''},led:{top:'PAR',mid:'',bot:'?·?·?'},big:{top:'PAR GRANDE',mid:'',bot:'?·?·?·?'},cob:{top:'COB',mid:'',bot:'?·?·?'},bar:{top:'',mid:'BARRA LED',bot:'?'}};
+var SNAP=24, VERSION='5.2';
+state.sym=state.sym||'a';
+var hov=null, userZoom=null, initial=null;
+
+// migrazione dai salvataggi precedenti
+state.items.forEach(function(i){
+  if(i.label!==undefined){
+    if(i.t==='faro'){i.top=i.label;i.mid=i.ch;i.bot='';}
+    else if(i.t==='bar'){i.top='';i.mid=i.label;i.bot=i.ch;}
+    else {i.top=i.label;i.mid='';i.bot=i.ch;}
+    delete i.label; delete i.ch;
+  }
+  if(i.y===undefined){ var r0=rowOf(i); i.y=r0?r0.y:300; }
+});
+
+function rowOf(it){ if(!it.row) return null; for(var i=0;i<state.rows.length;i++) if(state.rows[i].id===it.row) return state.rows[i]; return null; }
+function snapRow(y){ var best=null,bd=SNAP; state.rows.forEach(function(r){ var d=Math.abs(r.y-y); if(d<bd){bd=d;best=r;} }); return best; }
+function yOff(t,h){ return t==='faro'?34:h/2; }
+function clampX(x,w){ return Math.round(Math.min(1055-w/2,Math.max(135+w/2,x))); }
+function clampY(y){ return Math.round(Math.max(60,Math.min(740,y))); }
+function clampRow(y){ return Math.round(Math.max(70,Math.min(720,y))); }
+function scale(){ return sheet.getBoundingClientRect().width/1123 || 1; }
+function el(cls,css,txt){ var e=document.createElement('div'); if(cls) e.className=cls; if(css) e.style.cssText=css; if(txt!=null) e.textContent=txt; return e; }
+function persist(){ $('#state').textContent=JSON.stringify(state).replace(/</g,'\\u003c'); }
+var fut=[];
+function pushHist(s){ hist.push(s); if(hist.length>150) hist.shift(); fut=[]; }
+function snap(){ pushHist(JSON.stringify(state)); }
+function undo(){ if(!hist.length) return; fut.push(JSON.stringify(state)); state=JSON.parse(hist.pop()); persist(); render(); refreshRows(); }
+function redo(){ if(!fut.length) return; hist.push(JSON.stringify(state)); state=JSON.parse(fut.pop()); persist(); render(); refreshRows(); }
+
+function hot(r){ sheet.querySelectorAll('.truss').forEach(function(t){ t.classList.toggle('hot', !!r && state.rows[+t.dataset.i]===r); }); }
+
+function reposition(){
+  sheet.querySelectorAll('.truss').forEach(function(t){ var r=state.rows[+t.dataset.i]; t.style.top=(r.y-4)+'px'; });
+  sheet.querySelectorAll('.tag').forEach(function(t){ var r=state.rows[+t.dataset.i]; t.style.top=r.y+'px'; });
+  sheet.querySelectorAll('.it').forEach(function(e){ var it=e._it; if(it) e.style.top=(it.y-yOff(it.t,e._h))+'px'; });
+}
+
+function bindEdit(e,get,set,o){
+  o=o||{};
+  function finish(){
+    if(!o.always){ e.contentEditable='false'; e.classList.remove('editing'); }
+    var v=e.innerText.replace(/ /g,' ');
+    if(o.multi) v=v.replace(/\n+$/,''); else v=v.replace(/\s*\n\s*/g,' ').trim();
+    if(v!==get()){ snap(); set(v); persist(); if(o.after) o.after(); }
+    e.textContent=v;
+  }
+  function begin(){
+    if(e.isContentEditable) return;
+    e.contentEditable='true'; e.classList.add('editing'); e.focus();
+    var r=document.createRange(); r.selectNodeContents(e); var s=window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+  e._begin=begin;
+  e.addEventListener('blur',function(){ if(e.isContentEditable) finish(); });
+  e.addEventListener('keydown',function(ev){
+    ev.stopPropagation();
+    if(ev.key==='Escape'){ e.textContent=get(); e.blur(); }
+    else if(ev.key==='Enter'&&!o.multi){ ev.preventDefault(); e.blur(); }
+  });
+  e.addEventListener('paste',function(ev){
+    ev.preventDefault();
+    var t=(ev.clipboardData||window.clipboardData).getData('text');
+    document.execCommand('insertText',false,o.multi?t:t.replace(/\s*\n\s*/g,' '));
+  });
+  if(o.always){ e.contentEditable='true'; e.spellcheck=false; }
+  else e.addEventListener('dblclick',function(ev){ ev.stopPropagation(); begin(); });
+  e.addEventListener('pointerdown',function(ev){ if(e.isContentEditable) ev.stopPropagation(); });
+}
+
+function dots(cx,cy,r,rad){ var s='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="#000"/>'; for(var a=0;a<360;a+=60){ s+='<circle cx="'+(cx+rad*Math.cos(a*Math.PI/180)).toFixed(1)+'" cy="'+(cy+rad*Math.sin(a*Math.PI/180)).toFixed(1)+'" r="'+r+'" fill="#000"/>'; } return s; }
+function tri(w,h,r){
+  var H=h-5, y1=3+.22*H, y2=3+.58*H;
+  return '<polygon points="2,3 '+(w-2)+',3 '+(w/2)+','+(h-2)+'" fill="#fff" stroke="#000" stroke-width="2" stroke-linejoin="round"/>'+
+   '<circle cx="'+(w*.34).toFixed(1)+'" cy="'+y1.toFixed(1)+'" r="'+r+'" fill="#000"/><circle cx="'+(w*.66).toFixed(1)+'" cy="'+y1.toFixed(1)+'" r="'+r+'" fill="#000"/><circle cx="'+(w/2)+'" cy="'+y2.toFixed(1)+'" r="'+r+'" fill="#000"/>';
+}
+function symSVG(t,rot,sc,mode){
+  sc=sc||1; mode=mode||state.sym||'a';
+  var w=T[t][0],h=T[t][1],b;
+  if(mode==='a'){
+    if(t==='faro') b='<g fill="#fff" stroke="#000" stroke-width="2"><path d="M4 50V12A18 8 0 0 1 40 12V50"/><ellipse cx="22" cy="50" rx="18" ry="8"/></g>';
+    else b=tri(w,h,+(w*.065).toFixed(2));
+  } else if(t==='faro') b='<g fill="#fff" stroke="#000" stroke-width="2" stroke-linejoin="round"><rect x="14" y="0" width="16" height="6"/><rect x="8" y="5" width="28" height="35"/><polygon points="8,40 0,61 8,61 15,40"/><polygon points="36,40 44,61 36,61 29,40"/></g>';
+  else if(t==='led') b='<circle cx="25" cy="25" r="23" fill="#fff" stroke="#000" stroke-width="2"/>'+dots(25,25,4.3,12.5);
+  else if(t==='big') b='<circle cx="35" cy="35" r="33" fill="#fff" stroke="#000" stroke-width="2.5"/><circle cx="35" cy="35" r="27" fill="none" stroke="#000" stroke-width="1.5"/>'+dots(35,35,6,17);
+  else b='<rect x="1" y="1" width="44" height="44" rx="5" fill="#fff" stroke="#000" stroke-width="2"/><circle cx="23" cy="23" r="15" fill="#fff" stroke="#000" stroke-width="2"/><circle cx="23" cy="23" r="9" fill="#000"/>';
+  return '<svg class="sym" width="'+(w*sc)+'" height="'+(h*sc)+'" viewBox="0 0 '+w+' '+h+'"'+(rot?' style="transform:rotate('+rot+'deg)"':'')+'>'+b+'</svg>';
+}
+function mini(t,mode,sc){ return symSVG(t,0,sc||.5,mode).replace('class="sym"','class="msym"'); }
+function barMini(){ return '<svg class="msym" width="64" height="16" viewBox="0 0 64 16"><rect x="1" y="1" width="62" height="14" fill="#fff" stroke="#000" stroke-width="2"/></svg>'; }
+var ICON_DUP='<svg width="14" height="14" viewBox="0 0 14 14"><rect x="4" y="4" width="8" height="8"/><path d="M2 9V2h7"/></svg>';
+var ICON_DEL='<svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 3l8 8M11 3l-8 8"/></svg>';
+var ICON_RL='<svg width="14" height="14" viewBox="0 0 14 14"><path d="M3 6a4.5 4.5 0 1 1 1.4 4"/><path d="M3 2v4h4"/></svg>';
+var ICON_RR='<svg width="14" height="14" viewBox="0 0 14 14"><path d="M11 6a4.5 4.5 0 1 0-1.4 4"/><path d="M11 2v4H7"/></svg>';
+
+function rotPos(num,rot){
+  var k=state.sym==='b'?10:5, th=(rot||0)*Math.PI/180, bx=22+k*Math.sin(th), by=32-k*Math.cos(th);
+  num.style.left=(bx-20).toFixed(1)+'px'; num.style.top=(by-10).toFixed(1)+'px';
+}
+function mkBtn(title,icon,fn){
+  var b=document.createElement('button'); b.title=title; b.innerHTML=icon;
+  b.addEventListener('click',function(ev){ ev.stopPropagation(); fn(); });
+  b.addEventListener('pointerdown',function(ev){ ev.stopPropagation(); });
+  return b;
+}
+
+function buildItem(it){
+  var w=T[it.t][0],h=T[it.t][1];
+  var e=el('it t-'+it.t,'left:'+(it.x-w/2)+'px;width:'+w+'px;height:'+h+'px');
+  e._it=it; e._h=h;
+  var svg=null;
+  if(it.t!=='bar'){ e.insertAdjacentHTML('beforeend',symSVG(it.t,it.t==='faro'?it.rot:0)); svg=e.firstChild; }
+  function fld(cls,key,ph){
+    var f=el(cls+' f',null,it[key]||''); f.setAttribute('data-ph',ph);
+    bindEdit(f,function(){return it[key]||'';},function(v){it[key]=v;});
+    e.appendChild(f); return f;
+  }
+  var lbEl=fld('lb','top','sopra');
+  var mid=fld(it.t==='faro'?'num':'mid','mid','centro');
+  if(it.t==='faro') rotPos(mid,it.rot);
+  fld('chn','bot','sotto');
+  var tb=el('tb');
+  function rotate(d){
+    it.rot=(((it.rot||0)+d+540)%360)-180;
+    if(svg) svg.style.transform='rotate('+it.rot+'deg)';
+    rotPos(mid,it.rot); persist();
+  }
+  e._rotate=function(d){ snap(); rotate(d); };
+  if(it.t==='faro'){
+    tb.appendChild(mkBtn('Ruota di 30° a sinistra',ICON_RL,function(){ snap(); rotate(-30); }));
+    tb.appendChild(mkBtn('Ruota di 30° a destra',ICON_RR,function(){ snap(); rotate(30); }));
+  }
+  tb.appendChild(mkBtn('Duplica',ICON_DUP,function(){
+    snap(); var n=JSON.parse(JSON.stringify(it)); n.id=state.nextId++;
+    var nx=clampX(it.x+w+10,w); if(nx-it.x<w) nx=clampX(it.x-w-10,w); n.x=nx;
+    state.items.splice(state.items.indexOf(it)+1,0,n); persist(); render();
+  }));
+  tb.appendChild(mkBtn('Elimina',ICON_DEL,function(){
+    snap(); state.items.splice(state.items.indexOf(it),1); persist(); render();
+  }));
+  e.appendChild(tb);
+  function placeTb(){ tb.style.bottom='calc(100% + '+(lbEl.offsetHeight+8)+'px)'; }
+  var tm=null;
+  e.addEventListener('mouseenter',function(){ hov=e; clearTimeout(tm); placeTb(); e.classList.add('on'); });
+  lbEl.addEventListener('input',placeTb);
+  e.addEventListener('mouseleave',function(){ if(hov===e) hov=null; clearTimeout(tm); tm=setTimeout(function(){ e.classList.remove('on'); },300); });
+
+  // trascinamento libero, con magnete verso le americane
+  var st=null;
+  function mv(ev){
+    if(!st) return;
+    var s=scale(), dx=(ev.clientX-st.x)/s, dy=(ev.clientY-st.y)/s;
+    if(!st.moved){ if(Math.abs(dx)<4&&Math.abs(dy)<4) return; st.moved=true; e.classList.add('drag'); }
+    it.x=clampX(st.ix+dx,w); it.y=clampY(st.iy+dy);
+    e.style.left=(it.x-w/2)+'px'; e.style.top=(it.y-yOff(it.t,h))+'px';
+    hot(snapRow(it.y));
+  }
+  function up(){
+    window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); window.removeEventListener('pointercancel',up);
+    if(st&&st.moved){
+      pushHist(st.pre);
+      var t=snapRow(it.y);
+      if(t){ it.row=t.id; it.y=t.y; } else { it.row=null; }
+      st=null; persist(); render(); return;
+    }
+    e.classList.remove('drag'); hot(null);
+    var fl=st&&st.field; st=null;
+    if(fl&&fl._begin&&e.contains(fl)) fl._begin();
+  }
+  e.addEventListener('pointerdown',function(ev){
+    if(ev.button!==0||ev.target.isContentEditable) return;
+    st={x:ev.clientX,y:ev.clientY,ix:it.x,iy:it.y,pre:JSON.stringify(state),moved:false,field:ev.target.closest&&ev.target.closest('.f')};
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up);
+  });
+
+  return e;
+}
+
+// trascinamento di un'americana in verticale: porta con sé i fari agganciati
+function attachRowDrag(tg,i){
+  var r=state.rows[i], st=null;
+  function mv(ev){
+    if(!st) return;
+    var dy=(ev.clientY-st.y)/scale();
+    if(!st.moved){ if(Math.abs(dy)<3) return; st.moved=true; }
+    r.y=clampRow(st.y0+dy);
+    state.items.forEach(function(it){ if(it.row===r.id) it.y=r.y; });
+    reposition();
+  }
+  function up(){
+    window.removeEventListener('pointermove',mv); window.removeEventListener('pointerup',up); window.removeEventListener('pointercancel',up);
+    if(st&&st.moved){ pushHist(st.pre); persist(); }
+    st=null;
+  }
+  tg.addEventListener('pointerdown',function(ev){
+    if(ev.button!==0||ev.target.isContentEditable) return;
+    st={y:ev.clientY,y0:r.y,pre:JSON.stringify(state),moved:false};
+    window.addEventListener('pointermove',mv); window.addEventListener('pointerup',up); window.addEventListener('pointercancel',up);
+  });
+}
+
+function refreshRows(){
+  var sel=$('#selRow'), v=sel.value; sel.innerHTML='';
+  state.rows.forEach(function(r){ var t1=(r.t1||'').trim(), t2=(r.t2||'').trim(), o=document.createElement('option'); o.value=r.id;
+    o.dataset.full=(t1+' '+t2).trim()||r.id; o.dataset.short=((t1.length>4?t1.slice(0,2)+'.':t1)+' '+t2).trim()||r.id; o.textContent=o.dataset.short; sel.appendChild(o); });
+  if(v) sel.value=v;
+}
+function rowLabels(full){ Array.prototype.forEach.call($('#selRow').options,function(o){ o.textContent=full?o.dataset.full:o.dataset.short; }); }
+
+function render(){
+  sheet.innerHTML='';
+  hov=null;
+  sheet.appendChild(el('abs','left:128px;top:98px;width:922px;height:465px;border:1.5px dashed #000'));
+  var title=el('abs f','left:40px;top:22px;width:700px;height:26px;font-size:17px;line-height:26px;',state.title);
+  title.setAttribute('data-ph','Titolo'); bindEdit(title,function(){return state.title;},function(v){state.title=v;},{always:true});
+  sheet.appendChild(title);
+  var hr=el('abs f','left:743px;top:22px;width:340px;height:26px;font-size:12px;line-height:26px;text-align:right',state.headR);
+  hr.setAttribute('data-ph','intestazione'); bindEdit(hr,function(){return state.headR;},function(v){state.headR=v;},{always:true});
+  sheet.appendChild(hr);
+  state.rows.forEach(function(r,i){ var t=el('truss',''); t.dataset.i=i; t.addEventListener('dblclick',function(){ distribute(state.rows[i]); }); sheet.appendChild(t); });
+  state.rows.forEach(function(r,i){
+    var tg=el('tag'+((r.t1||'').length>12?' long':''),''); tg.dataset.i=i; tg.title="Trascina per spostare l'americana";
+    var a=el('f t1',null,r.t1); a.setAttribute('data-ph','nome'); bindEdit(a,function(){return r.t1;},function(v){r.t1=v;},{after:refreshRows});
+    var b=el('f t2',null,r.t2); b.setAttribute('data-ph','n.'); bindEdit(b,function(){return r.t2;},function(v){r.t2=v;},{after:refreshRows});
+    tg.appendChild(a); tg.appendChild(b); sheet.appendChild(tg);
+    attachRowDrag(tg,i);
+  });
+  state.items.forEach(function(it){ sheet.appendChild(buildItem(it)); });
+  var fl=el('abs f multi','left:40px;top:738px;width:520px;height:58px;font-size:12px;line-height:16px;',state.footL);
+  fl.setAttribute('data-ph','note a piè di pagina (sinistra)'); bindEdit(fl,function(){return state.footL;},function(v){state.footL=v;},{always:true,multi:true});
+  var fr=el('abs f multi','left:563px;top:738px;width:520px;height:58px;font-size:12px;line-height:16px;text-align:right',state.footR);
+  fr.setAttribute('data-ph','note a piè di pagina (destra)'); bindEdit(fr,function(){return state.footR;},function(v){state.footR=v;},{always:true,multi:true});
+  sheet.appendChild(fl); sheet.appendChild(fr);
+  reposition();
+  $('#symSwitch').setAttribute('aria-checked',state.sym==='b'?'true':'false');
+}
+
+function distribute(r){
+  var its=state.items.filter(function(i){return i.row===r.id;});
+  if(!its.length) return;
+  its.sort(function(a,b){return a.x-b.x;});
+  var W=0; its.forEach(function(i){W+=T[i.t][0];});
+  var gap=Math.max(2,(920-W)/(its.length+1));
+  snap(); var x=135+gap;
+  its.forEach(function(i){ var w=T[i.t][0]; i.x=Math.round(x+w/2); x+=w+gap; });
+  persist(); render();
+}
+
+var zc=100;
+function setZoom(p){
+  zc=Math.max(30,Math.min(160,p));
+  var s=zc/100;
+  $('#wrap').style.transform='scale('+s+')';
+  var h=$('#holder'); h.style.width=(1123*s)+'px'; h.style.height=(794*s)+'px';
+  $('#zoom').value=Math.round(zc); $('#zv').textContent=Math.round(zc)+'%';
+}
+function fitPct(){
+  var availW=document.documentElement.clientWidth-34, availH=window.innerHeight-$('#bar').offsetHeight-34;
+  return Math.min(availW/1123,availH/794)*100;
+}
+function fit(){ setZoom(fitPct()); }
+
+function serialize(){
+  persist();
+  var c=document.documentElement.cloneNode(true);
+  c.querySelector('#sheet').innerHTML='';
+  c.querySelector('#selRow').innerHTML='';
+  c.querySelector('#wrap').removeAttribute('style');
+  c.querySelector('#holder').removeAttribute('style');
+  return '<!doctype html>\n'+c.outerHTML;
+}
+async function saveAs(){
+  var html=serialize(), blob=new Blob([html],{type:'text/html'}), name='schema-luci.html';
+  if(window.showSaveFilePicker){
+    try{
+      var h=await window.showSaveFilePicker({suggestedName:name,types:[{description:'Pagina HTML',accept:{'text/html':['.html']}}]});
+      var w=await h.createWritable(); await w.write(blob); await w.close(); return;
+    }catch(err){ if(err&&err.name==='AbortError') return; }
+  }
+  var a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+}
+
+
+function helpHTML(){
+  function row(n,t){ return '<tr><td>'+n+'</td><td class="c">'+mini(t,'a',.7)+'</td><td class="c">'+mini(t,'b',.7)+'</td></tr>'; }
+  return ''+
+  '<p>La pagina funziona senza internet. Non salva nulla finché non salvi tu con i pulsanti in alto.</p>'+
+  '<h3>1 · Simboli</h3>'+
+  '<p>L\'interruttore in alto indica i simboli da usare. I testi non cambiano.</p>'+
+  '<table><tr><th>Faro</th><th>Interruttore a sinistra</th><th>Interruttore a destra</th></tr>'+
+  row('PC 1000','faro')+row('PAR','led')+row('PAR grande','big')+row('COB','cob')+
+  '<tr><td>Barra LED</td><td class="c">'+barMini()+'</td><td class="c">'+barMini()+'</td></tr></table>'+
+  '<h3>2 · Vista</h3>'+
+  '<p>Per cambiare lo zoom puoi:</p><ul>'+
+  '<li>usare il cursore in alto;</li>'+
+  '<li>tenere premuto <b>Ctrl</b> e girare la rotella del mouse;</li>'+
+  '<li>pizzicare il touchpad con due dita.</li></ul>'+
+  '<h3>3 · Aggiungere o togliere un faro</h3>'+
+  '<p>In «Aggiungi» scegli il tipo di faro e l\'americana, poi premi <b>Aggiungi</b>. Il faro compare al centro dell\'americana.</p>'+
+  '<p>Per avere un faro uguale a uno esistente, passaci sopra e premi <b>Duplica</b>.</p>'+
+  '<p>Per eliminare un faro, passaci sopra con il mouse e premi <b>Elimina</b>. I canali degli altri fari non cambiano.</p>'+
+  '<h3>4 · Posizionare un faro</h3><ul>'+
+  '<li><b>Trascinalo</b> lungo l\'americana o su un\'altra.</li>'+
+  '<li>Lascialo <b>libero</b> fuori dalle americane. Vicino a un\'americana si aggancia (effetto magnete).</li>'+
+  '<li><b>Doppio clic in uno spazio vuoto</b> di un\'americana: distribuisce i fari in modo simmetrico, a distanze uguali.</li></ul>'+
+  '<h3>5 · Scrivere canali, etichette, titoli e intestazioni</h3>'+
+  '<p>Su ogni faro puoi scrivere <b>sopra</b>, al <b>centro</b> e <b>sotto</b>.</p>'+
+  '<p><b>Doppio clic</b> per modificare, <b>Invio</b> per confermare, <b>Esc</b> per annullare.</p>'+
+  '<p>Passando il mouse si vedono anche i campi vuoti, che non saranno stampati o salvati in PDF.</p>'+
+  '<h3>6 · Americane</h3><ul>'+
+  '<li><b>Doppio clic</b> sul riquadro nero per rinominarla.</li>'+
+  '<li><b>Trascina</b> il riquadro nero per spostarla in verticale con i suoi fari.</li></ul>'+
+  '<h3>7 · Salvare e stampare</h3><ul>'+
+  '<li><b>Salva con nome…</b> crea una copia della pagina con tutte le modifiche. Riaprendola ritrovi la stessa combinazione.</li>'+
+  '<li><b>Stampa / PDF</b>: A4 orizzontale, senza pulsanti.</li></ul>'+
+  '<p>Titolo, intestazione e note a piè di pagina, se non sono inserite, non vengono stampate né salvate nel PDF.</p>';
+}
+function openHelp(){ $('#helpBody').innerHTML=helpHTML(); $('#ver').textContent='Versione script '+VERSION; $('#help').hidden=false; }
+function closeHelp(){ $('#help').hidden=true; }
+refreshRows(); persist();
+$('#symA').innerHTML=mini('faro','a',.45)+mini('led','a',.45);
+$('#symB').innerHTML=mini('faro','b',.45)+mini('led','b',.45);
+$('#symSwitch').addEventListener('click',function(){ snap(); state.sym=state.sym==='b'?'a':'b'; persist(); render(); });
+$('#bHelp').addEventListener('click',openHelp);
+$('#hClose').addEventListener('click',closeHelp);
+$('#help').addEventListener('pointerdown',function(e){ if(e.target===this) closeHelp(); });
+$('#bSave').addEventListener('click',saveAs);
+$('#bPrint').addEventListener('click',function(){ window.print(); });
+$('#bUndo').addEventListener('click',undo);
+$('#bRedo').addEventListener('click',redo);
+['mousedown','focus','keydown'].forEach(function(e){ $('#selRow').addEventListener(e,function(){ rowLabels(true); }); });
+['change','blur'].forEach(function(e){ $('#selRow').addEventListener(e,function(){ rowLabels(false); }); });
+$('#bReset').addEventListener('click',function(){ if(!initial||JSON.stringify(state)===initial) return; snap(); state=JSON.parse(initial); persist(); render(); refreshRows(); });
+$('#bFit').addEventListener('click',function(){ userZoom=null; fit(); });
+$('#zoom').addEventListener('input',function(){ userZoom=+this.value; setZoom(userZoom); });
+// zoom con pizzico a due dita del touchpad e gesti Safari
+window.addEventListener('wheel',function(ev){
+  if(!ev.ctrlKey) return;
+  ev.preventDefault(); ev.stopPropagation();
+  userZoom=zc*Math.exp(-Math.max(-25,Math.min(25,ev.deltaY))*0.01); setZoom(userZoom);
+},{passive:false,capture:true});
+var gz=100;
+window.addEventListener('gesturestart',function(e){ e.preventDefault(); gz=zc; });
+window.addEventListener('gesturechange',function(e){ e.preventDefault(); userZoom=gz*e.scale; setZoom(userZoom); });
+$('#bAdd').addEventListener('click',function(){
+  var t=$('#selType').value, rid=$('#selRow').value, d=DEF[t];
+  var r=state.rows.filter(function(x){return x.id===rid;})[0]||state.rows[0];
+  snap(); state.items.push({id:state.nextId++,row:r.id,y:r.y,t:t,x:600,rot:(t==='faro'&&r.id==='rs')?180:0,top:d.top,mid:d.mid,bot:d.bot});
+  persist(); render();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&!$('#help').hidden){ closeHelp(); return; }
+  if(e.target.isContentEditable) return;
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){ e.preventDefault(); if(e.shiftKey) redo(); else undo(); }
+  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='y'){ e.preventDefault(); redo(); }
+});
+window.addEventListener('resize',function(){ if(userZoom===null) fit(); });
+initial=JSON.stringify(state);
+render(); fit();
+})();
+</script>
+</body>
+</html>
